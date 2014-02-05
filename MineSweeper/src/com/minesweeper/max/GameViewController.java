@@ -43,8 +43,8 @@ public class GameViewController extends Activity {
 	private Hardness hardness;
 	private double tileSide;
 	private double blankSide;
-	private final double MAX_TILE_SIDE = 90.00;
-	private final double MIN_TILE_SIDE = 20.00;
+	private double MAX_TILE_SIDE;
+	private double MIN_TILE_SIDE;
 	private Timer timer;
 	private int seconds;
 	private int minutes;
@@ -106,6 +106,12 @@ public class GameViewController extends Activity {
 		gameLayout = new LinearLayout(this);
 		gameLayout.setOrientation(LinearLayout.VERTICAL);
 
+		// set tile max and min based on window size for better UI
+		MAX_TILE_SIDE = Math.min((double) gameViewSize.x / 8,
+				(double) gameViewSize.y / 8);
+		MIN_TILE_SIDE = Math.max((double) gameViewSize.x / 15,
+				(double) gameViewSize.y / 10);
+		
 		LinearLayout.LayoutParams gameLayoutParams = new LayoutParams(
 				gameViewSize.x, gameViewSize.y);
 		gameLayout.setLayoutParams(gameLayoutParams);
@@ -222,7 +228,7 @@ public class GameViewController extends Activity {
 	private void setGameView() {
 		if (game == null)
 			game = new Game();
-		
+
 		// set up default settings
 		game.gameState = GameState.ready;
 		game.playState = PlayState.reveal;
@@ -254,7 +260,7 @@ public class GameViewController extends Activity {
 
 		if (blankSide < 0)
 			blankSide = 0;
-	}
+		}
 
 	// display tiles in LinearLayout in columns, which layouts linearly in rows
 	private void displayTiles() {
@@ -283,7 +289,7 @@ public class GameViewController extends Activity {
 				aTile.setId(index);
 				drawTile(aTile);
 				rowLayout.addView(aTile, j);
-				
+
 				// add button listener to each tile
 				listenTileOnClick(aTile);
 			}
@@ -367,7 +373,8 @@ public class GameViewController extends Activity {
 		}
 
 		// draw tile border by set background image by reducing layout bounds
-		// using setLayerInset, then a border image under background image will be shown
+		// using setLayerInset, then a border image under background image will
+		// be shown
 		Drawable bgTile = aTile.getBackground();
 		if (bgTile != null) {
 			Drawable bgBorder = getResources().getDrawable(
@@ -392,7 +399,8 @@ public class GameViewController extends Activity {
 		aTile.setText(String.format("%d", aTile.tileNumber));
 		aTile.setBackground(null);
 
-		// different number displays in different color based on mine sweeper customer
+		// different number displays in different color based on mine sweeper
+		// customer
 		switch (aTile.tileNumber) {
 		case 1:
 			aTile.setTextColor(Color.BLUE);
@@ -570,7 +578,8 @@ public class GameViewController extends Activity {
 		});
 	}
 
-	// listener to click flag button to switch play state from play to flag or exchange
+	// listener to click flag button to switch play state from play to flag or
+	// exchange
 	private void listenFlagButtonOnClick() {
 		flagButton.setOnClickListener(new View.OnClickListener() {
 
